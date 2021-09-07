@@ -98,6 +98,7 @@ i {
   align-items: center;
   padding: var(--base-space);
   margin-block: var(--base-space);
+  margin-bottom: 20px;
 }
 
 .item__thumbnail {
