@@ -1,0 +1,167 @@
+:root {
+  /* color */
+  --color-orange: #ffb74d;
+
+  /* duration */
+  --animation-duration: 300ms;
+
+  /* size */
+  --font-size: 18px;
+  --size-thumbnail: 120px;
+  --base-space: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+li.invisible {
+  display: none;
+}
+
+body {
+  height: 100vh;
+  background-color: var(--color-orange);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  cursor: pointer;
+  transition: all var(--animation-duration) ease-in-out;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 30px;
+  border-radius: 50%;
+}
+
+.logo:hover,
+.btn:hover,
+.btn__kinds:hover {
+  transform: scale(1.2);
+}
+img {
+  border-radius: 50%;
+}
+
+.btn {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  transition: all var(--animation-duration) ease-in-out;
+  margin-right: 8px;
+}
+
+.btn__kinds {
+  outline: none;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  background-color: white;
+  transition: all var(--animation-duration) ease-in-out;
+  margin-right: 8px;
+  margin-top: 20px;
+}
+
+.btn__img {
+  width: 70px;
+  height: 70px;
+  margin-top: var(--base-space);
+}
+
+i {
+  color: white;
+  font-size: 70px;
+  position: relative;
+  bottom: 9px;
+  margin-right: var(--base-space);
+}
+
+.items {
+  width: 60%;
+  height: 60%;
+  list-style: none;
+  padding-left: 0;
+  overflow: scroll;
+}
+.items::-webkit-scrollbar {
+  display: none;
+}
+.item {
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: var(--base-space);
+  margin-block: var(--base-space);
+}
+
+.item__thumbnail {
+  width: var(--size-thumbnail);
+  height: var(--size-thumbnail);
+}
+
+.item__description {
+  margin-left: var(--base-space);
+  font-size: var(--font-size);
+}
+
+@media only screen and (max-width: 767px) {
+  /* For mobile phones: */
+  :root {
+    --size-thumbnail: 80px;
+  }
+  .logo {
+    cursor: pointer;
+    transition: all var(--animation-duration) ease-in-out;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+  }
+  .buttons {
+    margin-left: 25px;
+  }
+
+  .buttons__kinds {
+    width: 80%;
+    position: relative;
+    left: 30px;
+  }
+  .btn {
+    padding: 0;
+  }
+  .btn__kinds {
+    outline: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    background-color: white;
+    transition: all var(--animation-duration) ease-in-out;
+    margin-top: 10px;
+  }
+
+  .btn__img {
+    width: 40px;
+    height: 40px;
+    margin-top: var(--base-space);
+  }
+
+  i {
+    color: white;
+    font-size: 40px;
+    position: relative;
+    bottom: 5px;
+    margin-right: var(--base-space);
+  }
+
+  .item__thumbnail {
+    width: var(--size-thumbnail);
+    height: var(--size-thumbnail);
+  }
+}

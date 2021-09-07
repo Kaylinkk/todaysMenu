@@ -1,0 +1,160 @@
+{
+    "items": [
+        {
+            "type": "rice",
+            "nation": "korea",
+            "image": "../img/K-braise-pork.jpg",
+            "name": " braise-pork"
+        },
+        {
+            "type": "meat",
+            "nation": "korea",
+            "image": "../img/K-bulgogi.jpg",
+            "name": " bulgogi"
+        },
+        {
+            "type": "meat",
+            "nation": "korea",
+            "image": "../img/K-chicken.jpg",
+            "name": " chicken"
+        },
+        {
+            "type": "soup",
+            "nation": "korea",
+            "image": "../img/K-chicken-soup.jpg",
+            "name": " chicken-soup"
+        },
+        {
+            "type": "meat",
+            "nation": "korea",
+            "image": "../img/K-daechang.jpg",
+            "name": " daechang"
+        },
+        {
+            "type": "rice",
+            "nation": "korea",
+            "image": "../img/K-fried-rice.jpg",
+            "name": " fried-rice"
+        },
+        {
+            "type": "noodle",
+            "nation": "korea",
+            "image": "../img/K-japchae.jpg",
+            "name": " japchae"
+        },
+        {
+            "type": "flour",
+            "nation": "korea",
+            "image": "../img/K-jeon.jpg",
+            "name": " jeon"
+        },
+        {
+            "type": "rice",
+            "nation": "korea",
+            "image": "../img/K-kimbap.jpg",
+            "name": " kimbap"
+        },
+        {
+            "type": "meat",
+            "nation": "korea",
+            "image": "../img/K-Kimchijjim.jpg",
+            "name": " Kimchijjim"
+        },
+        {
+            "type": "meat",
+            "nation": "korea",
+            "image": "../img/K-Porkfeet.jpg",
+            "name": " Porkfeet"
+        },
+        {
+            "type": "meat",
+            "nation": "korea",
+            "image": "../img/K-spam.jpg",
+            "name": " spam"
+        },
+        {
+            "type": "rice",
+            "nation": "japan",
+            "image": "../img/J-fried-rice.jpg",
+            "name": " fried-rice"
+        },
+        {
+            "type": "seafood",
+            "nation": "japan",
+            "image": "../img/J-fried-shrimp.jpg",
+            "name": " fried-shrimp"
+        },
+        {
+            "type": "flour",
+            "nation": "japan",
+            "image": "../img/J-okonomiyaki.jpg",
+            "name": " okonomiyaki"
+        },
+        {
+            "type": "rice",
+            "nation": "japan",
+            "image": "../img/J-omulet.jpg",
+            "name": " omulet"
+        },
+        {
+            "type": "meat",
+            "nation": "japan",
+            "image": "../img/J-porkcutlet.jpg",
+            "name": " porkcutlet"
+        },
+        {
+            "type": "noodle",
+            "nation": "japan",
+            "image": "../img/J-ramen.jpg",
+            "name": " ramen"
+        },
+        {
+            "type": "soup",
+            "nation": "japan",
+            "image": "../img/J-sukiyaki-soup.jpg",
+            "name": " sukiyaki"
+        },
+        {
+            "type": "seafood",
+            "nation": "japan",
+            "image": "../img/J-sushi.jpg",
+            "name": " sushi"
+        },
+        {
+            "type": "noodle",
+            "nation": "japan",
+            "image": "../img/J-yakisoba.jpg",
+            "name": " yakisoba"
+        },
+        {
+            "type": "meat",
+            "nation": "japan",
+            "image": "../img/J-yakitori.jpg",
+            "name": " yakitori"
+        },
+        {
+            "type": "flour",
+            "nation": "china",
+            "image": "../img/C-dumpling.jpg",
+            "name": " dumpling"
+        },
+        {
+            "type": "vegi",
+            "nation": "china",
+            "image": "../img/C-fried-vegi.jpg",
+            "name": " fried-vegi"
+        },
+        {
+            "type": "soup",
+            "nation": "china",
+            "image": "../img/C-hot-pot.jpg",
+            "name": " hot-pot"
+        },
+        {
+            "type": "flour",
+            "nation": "western",
+            "image": "../img/W-cheese-burger.jpg",
+            "name": " cheese-burger"
+        }
+    ]
+}

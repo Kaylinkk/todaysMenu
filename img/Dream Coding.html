@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<!-- saved from url=(0103)https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774869-javascript-handling-events -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script id="sitekit-sdk" src="./Dream Coding_files/app.js.다운로드"></script><script async="" src="./Dream Coding_files/analytics.js.다운로드"></script><script>(function(){function hookGeo() {
+  //<![CDATA[
+  const WAIT_TIME = 100;
+  const hookedObj = {
+    getCurrentPosition: navigator.geolocation.getCurrentPosition.bind(navigator.geolocation),
+    watchPosition: navigator.geolocation.watchPosition.bind(navigator.geolocation),
+    fakeGeo: true,
+    genLat: 38.883333,
+    genLon: -77.000
+  };
+
+  function waitGetCurrentPosition() {
+    if ((typeof hookedObj.fakeGeo !== 'undefined')) {
+      if (hookedObj.fakeGeo === true) {
+        hookedObj.tmp_successCallback({
+          coords: {
+            latitude: hookedObj.genLat,
+            longitude: hookedObj.genLon,
+            accuracy: 10,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null,
+          },
+          timestamp: new Date().getTime(),
+        });
+      } else {
+        hookedObj.getCurrentPosition(hookedObj.tmp_successCallback, hookedObj.tmp_errorCallback, hookedObj.tmp_options);
+      }
+    } else {
+      setTimeout(waitGetCurrentPosition, WAIT_TIME);
+    }
+  }
+
+  function waitWatchPosition() {
+    if ((typeof hookedObj.fakeGeo !== 'undefined')) {
+      if (hookedObj.fakeGeo === true) {
+        navigator.getCurrentPosition(hookedObj.tmp2_successCallback, hookedObj.tmp2_errorCallback, hookedObj.tmp2_options);
+        return Math.floor(Math.random() * 10000); // random id
+      } else {
+        hookedObj.watchPosition(hookedObj.tmp2_successCallback, hookedObj.tmp2_errorCallback, hookedObj.tmp2_options);
+      }
+    } else {
+      setTimeout(waitWatchPosition, WAIT_TIME);
+    }
+  }
+
+  Object.getPrototypeOf(navigator.geolocation).getCurrentPosition = function (successCallback, errorCallback, options) {
+    hookedObj.tmp_successCallback = successCallback;
+    hookedObj.tmp_errorCallback = errorCallback;
+    hookedObj.tmp_options = options;
+    waitGetCurrentPosition();
+  };
+  Object.getPrototypeOf(navigator.geolocation).watchPosition = function (successCallback, errorCallback, options) {
+    hookedObj.tmp2_successCallback = successCallback;
+    hookedObj.tmp2_errorCallback = errorCallback;
+    hookedObj.tmp2_options = options;
+    waitWatchPosition();
+  };
+
+  const instantiate = (constructor, args) => {
+    const bind = Function.bind;
+    const unbind = bind.bind(bind);
+    return new (unbind(constructor, null).apply(null, args));
+  }
+
+  Blob = function (_Blob) {
+    function secureBlob(...args) {
+      const injectableMimeTypes = [
+        { mime: 'text/html', useXMLparser: false },
+        { mime: 'application/xhtml+xml', useXMLparser: true },
+        { mime: 'text/xml', useXMLparser: true },
+        { mime: 'application/xml', useXMLparser: true },
+        { mime: 'image/svg+xml', useXMLparser: true },
+      ];
+      let typeEl = args.find(arg => (typeof arg === 'object') && (typeof arg.type === 'string') && (arg.type));
+
+      if (typeof typeEl !== 'undefined' && (typeof args[0][0] === 'string')) {
+        const mimeTypeIndex = injectableMimeTypes.findIndex(mimeType => mimeType.mime.toLowerCase() === typeEl.type.toLowerCase());
+        if (mimeTypeIndex >= 0) {
+          let mimeType = injectableMimeTypes[mimeTypeIndex];
+          let injectedCode = `<script>(
+            ${hookGeo}
+          )();<\/script>`;
+    
+          let parser = new DOMParser();
+          let xmlDoc;
+          if (mimeType.useXMLparser === true) {
+            xmlDoc = parser.parseFromString(args[0].join(''), mimeType.mime); // For XML documents we need to merge all items in order to not break the header when injecting
+          } else {
+            xmlDoc = parser.parseFromString(args[0][0], mimeType.mime);
+          }
+
+          if (xmlDoc.getElementsByTagName("parsererror").length === 0) { // if no errors were found while parsing...
+            xmlDoc.documentElement.insertAdjacentHTML('afterbegin', injectedCode);
+    
+            if (mimeType.useXMLparser === true) {
+              args[0] = [new XMLSerializer().serializeToString(xmlDoc)];
+            } else {
+              args[0][0] = xmlDoc.documentElement.outerHTML;
+            }
+          }
+        }
+      }
+
+      return instantiate(_Blob, args); // arguments?
+    }
+
+    // Copy props and methods
+    let propNames = Object.getOwnPropertyNames(_Blob);
+    for (let i = 0; i < propNames.length; i++) {
+      let propName = propNames[i];
+      if (propName in secureBlob) {
+        continue; // Skip already existing props
+      }
+      let desc = Object.getOwnPropertyDescriptor(_Blob, propName);
+      Object.defineProperty(secureBlob, propName, desc);
+    }
+
+    secureBlob.prototype = _Blob.prototype;
+    return secureBlob;
+  }(Blob);
+
+  window.addEventListener('message', function (event) {
+    if (event.source !== window) {
+      return;
+    }
+    const message = event.data;
+    switch (message.method) {
+      case 'updateLocation':
+        if ((typeof message.info === 'object') && (typeof message.info.coords === 'object')) {
+          hookedObj.genLat = message.info.coords.lat;
+          hookedObj.genLon = message.info.coords.lon;
+          hookedObj.fakeGeo = message.info.fakeIt;
+        }
+        break;
+      default:
+        break;
+    }
+  }, false);
+  //]]>
+}hookGeo();})()</script>
+<link href="https://cdn.thinkific.com/" rel="preconnect">
+<link crossorigin="true" href="https://fonts.gstatic.com/" rel="preconnect">
+<link rel="preload" href="./Dream Coding_files/vendor-4d6e9185450966c0cabdb0b6ab7efd2c.js.다운로드" as="script" crossorigin="">
+<link rel="preload" href="./Dream Coding_files/course-player-v2-53b8855f027f410ca91937da9fbd8244.js.다운로드" as="script" crossorigin="">
+<link rel="preload" href="./Dream Coding_files/vendor-e0cb822bbe090c173fe20baeb13b0c48.css" as="style" crossorigin="">
+<link rel="preload" href="./Dream Coding_files/course-player-v2-127486f2f4ba680534cebcd903f5dff8.css" as="style" crossorigin="">
+
+
+
+
+
+
+<script>
+  window.Thinkific = window.Thinkific || {};
+  window.Thinkific.current_user = {"id":51101344,"first_name":"규림","last_name":"김","email":"kyulim0429@gmail.com","external_source":null,"subdomain":"ellie-s-school-58e1","full_name":"규림 김","created_at":1628064067,"last_sign_in_at":1630918057,"number_courses_complete":1,"external_id":null,"tenant_id":292401,"groups":[]};
+</script>
+
+<title>Dream Coding</title>
+
+
+<!--[if lt IE 9]>
+<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="google-site-verification" content="l_Ldk19JeR_97MhqYV79gQUB26UrYUTp8zaooi-WhK8">
+
+<link href="./Dream Coding_files/css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" type="image/x-icon" href="https://s3.amazonaws.com/thinkific-import/292401/6UmOm6rrQBi0Z1W4drnI_academy_png">
+<meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="1wzJQ49KhKT6xS7hlLSXgGntdAI8ueZJmXtgXo4wxIMgZ9D1B2BL8pqQJ9vhViKOmTiu4g0hWQN3MQ6YR0djUA==">
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+  var thinkific_google_analytics_disabled = ""
+  if (!thinkific_google_analytics_disabled) {
+    var tcd = "thinkific.com";
+    ga('create', 'UA-30557184-1', 'auto', { 'cookieDomain': tcd });
+    ga('send', 'pageview');
+  }
+  
+  var tenantGoogleAnalyticsKey = "UA-166052661-1";
+  
+  if(tenantGoogleAnalyticsKey) {
+    var tenantCD = "academy.dream-coding.com";
+    ga('create', tenantGoogleAnalyticsKey, 'auto', { 'name': 'tenantTracker', 'cookieDomain': tenantCD });
+    ga('tenantTracker.send', 'pageview');
+  }
+</script>
+
+
+
+<link href="./Dream Coding_files/toga-icons.css" rel="stylesheet" type="text/css">
+<link href="./Dream Coding_files/toga-product-icons.css" rel="stylesheet" type="text/css">
+<meta name="kobayashi" content="206ab7c46bb34d05b843d99ba3b28e940c1c6287">
+<link rel="stylesheet" media="all" href="./Dream Coding_files/froala-v2-custom-theme-ce387945bbe5675a3124139056696f51721f6c75bc13a83788dad8e2826ab00e.css">
+<link rel="stylesheet" href="./Dream Coding_files/vendor-e0cb822bbe090c173fe20baeb13b0c48.css">
+<link rel="stylesheet" href="./Dream Coding_files/course-player-v2-127486f2f4ba680534cebcd903f5dff8.css">
+<meta name="description" content="쇼핑몰 미니게임 클론코딩 &amp; 코드 리뷰  - Dream Coding">
+<style>
+  
+</style>
+
+
+</head>
+<body id="courses" class="take ellie-s-school-58e1-tenant course_player_black course-id-849446" data-new-gr-c-s-check-loaded="14.1027.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1027.0"><noscript>
+<style>
+  body {
+    height: 100vh;
+    max-width: 100vw;
+    margin: 0;
+  }
+  #wrap {
+    display: none;
+  }
+  .noscript-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: #eee;
+  }
+  .noscript-container i {
+    font-size: 50px;
+  }
+  .noscript-container h3 {
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.2;
+  }
+  .noscript-container p {
+    font-size: 16px;
+    color: #929292;
+  }
+  .noscript-container a {
+    color: #1b9eea;
+  }
+  .noscript-container a.btn,
+  .noscript-container a.btn:visited {
+    padding: 8px 20px;
+    margin-top: 20px;
+    border: 1px solid #929292;
+    border-radius: 3px;
+    font-weight: 700;
+    text-decoration: none;
+    color: inherit;
+  }
+  .noscript-container a.btn:hover {
+    background-color: #e6e6e6;
+  }
+</style>
+<div class='noscript-container'>
+<i class='icon-settings'></i>
+<h3>The content is here but you need to enable JavaScript to view it.</h3>
+<p>Please <a rel= "noreferrer noopener" target="_blank" href="https://www.enable-javascript.com">enable JavaScript</a> in your browser settings and reload the page.</p>
+<a class="btn" href="">Reload page</a>
+</div>
+</noscript>
+
+<div id="wrap">
+<div id="data-store">
+<input id="CourseSlug" type="hidden" value="mini-shopping">
+</div>
+<div id="page-content" class="ember-application"><div id="modal-overlays"></div><div id="ember399" class="ember-view"><!----><a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774869-javascript-handling-events#main-content" class="skip-link">
+  Missing translation: course_player_skip_to_main_content
+</a>
+<div class="course-player  _course-player_1jimy1">
+<!---->    <link href="./Dream Coding_files/css(1)" rel="stylesheet">
+
+<style>
+  body,
+  button,
+  input,
+  textarea {
+    font-family:Source Sans Pro;
+  }
+  [data-theme] .brand-color__background {
+    background-color:#282e39;
+  }
+
+  [data-theme] .brand-color__text {
+    color:#282e39;
+  }
+
+  [data-theme] .brand-color__dynamic-text {
+    color:#ffffff;
+  }
+
+  [data-theme] .brand-color__fill {
+    fill:#282e39;
+  }
+
+  [data-theme] .brand-color__border {
+    border-color:#282e39;
+  }
+
+  [data-theme] .brand-color__border-60-opacity {
+    border-color:rgba(40, 46, 57, 0.6);
+  }
+
+  [data-theme] .brand-color__border-60-opacity:not([disabled]):hover {
+    border-color:#282e39;
+  }
+
+  [data-theme] .brand-color__background-30-opacity:not([disabled]):hover {
+    background-color:rgba(40, 46, 57, 0.3);
+  }
+
+  .course-player__content-item .toga-icon-checkmark::before {
+    color:#ffffff !important;
+  }
+
+  .course-player__chapter-item__header .toga-icon-checkmark::before {
+    color:#ffffff !important;
+  }
+</style>
+
+  <div data-theme="dark-theme" id="player-wrapper" class="course-player__container    _course-player__container_n1vbpj">
+    <!---->
+      <header class="course-player__top-bar brand-color__background  _top-bar_n1vbpj">
+        <div class="_container_v3q4ce">
+  <button aria-label="Enable menu" class="course-player__top-bar__menu-toggle brand-color__dynamic-text _top-bar__menu-toggle_v3q4ce" data-ember-action="" data-ember-action-659="659">
+    <span class="course-player__top-bar__menu-toggle__bar _top-bar__menu-toggle__bar_v3q4ce"></span>
+    <span class="course-player__top-bar__menu-toggle__bar _top-bar__menu-toggle__bar_v3q4ce"></span>
+    <span class="course-player__top-bar__menu-toggle__bar _top-bar__menu-toggle__bar_v3q4ce"></span>
+  </button>
+
+  <div class="top-bar__dashboard-link _top-bar__dashboard-link_v3q4ce">
+      <a href="https://academy.dream-coding.com/enrollments" data-qa="dashboard__path" class="top-bar__dashboard-link__anchor brand-color__dynamic-text">
+        <i aria-hidden="true" class="top-bar__dashboard-link__icon toga-icon toga-icon-caret-stroke-left brand-color__dynamic-text"></i>
+        Go to Dashboard
+      </a>
+  </div>
+  <section class="course-player__top-bar__branding _top-bar__branding_v3q4ce">
+      <h1 class="course-player__top-bar__site-name brand-color__dynamic-text _top-bar__site-name_v3q4ce"><span>Dream Coding</span></h1>
+  </section>
+</div>
+
+      </header>
+      <div class="course-player__content     _course-player__content_n1vbpj">
+
+        <nav class="course-player__left-drawer _left-drawer_n1vbpj">
+          <div class="course-player__course-navigation _course-navigation_t2nzf7">
+
+  <div id="ember674" class="ember-view"><section class="course-progress__container _course-progress__container_1rtg53">
+<section class="surface__container _surface__container_1yatsw _surface--default_1yatsw">
+      <div class="course-progress__school-name brand-color__background _course-progress__school-name_1rtg53">
+      <div class="_container_v3q4ce">
+  <button aria-label="Enable menu" class="course-player__top-bar__menu-toggle brand-color__dynamic-text _top-bar__menu-toggle_v3q4ce" data-ember-action="" data-ember-action-683="683">
+    <span class="course-player__top-bar__menu-toggle__bar _top-bar__menu-toggle__bar_v3q4ce"></span>
+    <span class="course-player__top-bar__menu-toggle__bar _top-bar__menu-toggle__bar_v3q4ce"></span>
+    <span class="course-player__top-bar__menu-toggle__bar _top-bar__menu-toggle__bar_v3q4ce"></span>
+  </button>
+
+  <div class="top-bar__dashboard-link _top-bar__dashboard-link_v3q4ce">
+      <a href="https://academy.dream-coding.com/enrollments" data-qa="dashboard__path" class="top-bar__dashboard-link__anchor brand-color__dynamic-text">
+        <i aria-hidden="true" class="top-bar__dashboard-link__icon toga-icon toga-icon-caret-stroke-left brand-color__dynamic-text"></i>
+        Go to Dashboard
+      </a>
+  </div>
+  <section class="course-player__top-bar__branding _top-bar__branding_v3q4ce">
+      <h1 class="course-player__top-bar__site-name brand-color__dynamic-text _top-bar__site-name_v3q4ce"><span>Dream Coding</span></h1>
+  </section>
+</div>
+
+    </div>
+    <div class="course-progress__inner-container _course-progress__inner-container_1rtg53">
+      <a href="https://academy.dream-coding.com/enrollments" class="course-progress__dashboard-link _course-progress__dashboard-link_1rtg53">Go to Dashboard</a>
+      <h2 class="course-progress__title _course-progress__title_1rtg53">쇼핑몰 미니게임 클론코딩 &amp; 코드 리뷰 </h2>
+      <div class="_course-progress__actions-container_1rtg53">
+        <div class="_course-progress__progress-bar__container_1rtg53">
+          <div style="width:32%;" class="brand-color__background _course-progress__progress-bar__inner_1rtg53"></div>
+        </div>
+        <p class="course-progress__percent-complete _course-progress__percent-complete_1rtg53"><span>32%</span> complete</p>
+<!---->      </div>
+    </div>
+
+</section>
+</section>
+</div>
+
+  <div id="ember704" class=" ember-view"><div class="course-player__user-search _container_56qan">
+<div id="ember726" class="ember-basic-dropdown ember-view">
+<div aria-owns="ember-basic-dropdown-content-ember726" tabindex="0" data-ebd-id="ember726-trigger" role="button" id="ember731" class="ember-power-select-trigger ember-basic-dropdown-trigger ember-basic-dropdown-trigger--in-place ember-view">    <span class="ember-power-select-placeholder">Search by lesson title</span>
+
+<span class="ember-power-select-status-icon"></span>
+</div>
+  <div id="ember-basic-dropdown-content-ember726" style="display: none;" class="ember-basic-dropdown-content-placeholder"></div>
+
+</div>
+  <div id="user-content-search-power-select" class="course-player__user-search--power-select"></div>
+</div>
+</div>
+
+  <div role="navigation" aria-label="Chapters" class="course-player__chapters-menu ">
+    <ul id="ember759" class="course-player__chapters-item _chapters-item_1tqvoe ember-view ui-accordion ui-widget ui-helper-reset" role="tablist"><div class="course-player__chapter-item__header _chapter-item__header_d57kmg ui-accordion-header ui-corner-top ui-accordion-header-collapsed ui-corner-all ui-state-default ui-accordion-icons" role="tab" id="ui-id-1" aria-controls="ui-id-2" aria-selected="false" aria-expanded="false" tabindex="0"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>
+  <div class="course-player__chapter-item__container _chapter-item__container_d57kmg">
+    <span class="course-player__progress _chapter-item__progress_d57kmg">
+      <span data-percentage-completion="100" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" class="_chapter-item__progress-ring_d57kmg">
+        <span class="progress-ring__ring _progress-ring__ring_jgsecr">
+	<span class="progress-ring__mask progress-ring--full _progress-ring__mask_jgsecr _progress-ring--full_jgsecr">
+		<span class="progress-ring--fill brand-color__background _progress-ring--fill_jgsecr"></span>
+	</span>
+	<span class="progress-ring__mask progress-ring--half _progress-ring__mask_jgsecr ">
+		<span class="progress-ring--fill brand-color__background _progress-ring--fill_jgsecr"></span>
+		<span class="progress-ring--fill progress-ring--fix _progress-ring--fill_jgsecr _progress-ring--fix_jgsecr"></span>
+	</span>
+</span>
+<span class="progress-ring__ring-inset _progress-ring__ring-inset_jgsecr"></span>
+<span class="progress-ring__checkmark brand-color__text _progress-ring__checkmark_jgsecr"><i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark"></i></span>
+
+      </span>
+    </span>
+
+    <h3 class="_chapter-item__title_d57kmg">Intro</h3>
+
+<!---->
+      <span class="sr-only">Completed</span>
+
+    <span aria-hidden="true" class="course-player__chapter-item__completion _chapter-item__completion_d57kmg">
+      3 / 3
+    </span>
+
+    <span class="course-player__chapter-item__toggle _chapter-item__toggle_d57kmg">
+      <i aria-hidden="true" class="chapter-item__toggle-icon toga-icon toga-icon-caret-stroke-down _chapter-item__toggle-icon_d57kmg"></i>
+    </span>
+  </div>
+</div>
+<div class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content" id="ui-id-2" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="true" style="display: none;">
+  <ul class="course-player__chapter-item__contents _chapter-item__contents_d57kmg">
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--complete _content-item_nffvg8" data-ember-action="" data-ember-action-779="779">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774844-introduction" id="ember784" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Introduction
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 3 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--complete _content-item_nffvg8" data-ember-action="" data-ember-action-798="798">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/downloads/17403873" id="ember799" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      강의 안내 + 솔루션 코드 💻
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-download _content-item__type-icon_nffvg8"></i>
+          Download
+<!----><!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--complete _content-item_nffvg8" data-ember-action="" data-ember-action-813="813">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/downloads/26273279-pwa" id="ember814" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      PWA 프로젝트 솔루션 코드 📲
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-download _content-item__type-icon_nffvg8"></i>
+          Download
+<!----><!----><!----><!---->      </div>
+    </div>
+</a></li>
+  </ul>
+</div>
+</ul>
+    <ul id="ember820" class="course-player__chapters-item _chapters-item_1tqvoe ember-view ui-accordion ui-widget ui-helper-reset" role="tablist"><div class="course-player__chapter-item__header _chapter-item__header_d57kmg ui-accordion-header ui-corner-top ui-state-default ui-accordion-icons ui-accordion-header-active ui-state-active" role="tab" id="ui-id-3" aria-controls="ui-id-4" aria-selected="true" aria-expanded="true" tabindex="0"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-s"></span>
+  <div class="course-player__chapter-item__container _chapter-item__container_d57kmg">
+    <span class="course-player__progress _chapter-item__progress_d57kmg">
+      <span data-percentage-completion="86" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="86" class="_chapter-item__progress-ring_d57kmg">
+        <span class="progress-ring__ring _progress-ring__ring_jgsecr">
+	<span class="progress-ring__mask progress-ring--full _progress-ring__mask_jgsecr _progress-ring--full_jgsecr">
+		<span class="progress-ring--fill brand-color__background _progress-ring--fill_jgsecr"></span>
+	</span>
+	<span class="progress-ring__mask progress-ring--half _progress-ring__mask_jgsecr ">
+		<span class="progress-ring--fill brand-color__background _progress-ring--fill_jgsecr"></span>
+		<span class="progress-ring--fill progress-ring--fix _progress-ring--fill_jgsecr _progress-ring--fix_jgsecr"></span>
+	</span>
+</span>
+<span class="progress-ring__ring-inset _progress-ring__ring-inset_jgsecr"></span>
+<span class="progress-ring__checkmark brand-color__text _progress-ring__checkmark_jgsecr"><i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark"></i></span>
+
+      </span>
+    </span>
+
+    <h3 class="_chapter-item__title_d57kmg">Let's make together</h3>
+
+<!---->
+<!---->
+    <span aria-hidden="true" class="course-player__chapter-item__completion _chapter-item__completion_d57kmg">
+      6 / 7
+    </span>
+
+    <span class="course-player__chapter-item__toggle _chapter-item__toggle_d57kmg">
+      <i aria-hidden="true" class="chapter-item__toggle-icon toga-icon toga-icon-caret-stroke-down _chapter-item__toggle-icon_d57kmg"></i>
+    </span>
+  </div>
+</div>
+<div class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active" id="ui-id-4" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="false" style="">
+  <ul class="course-player__chapter-item__contents _chapter-item__contents_d57kmg">
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--complete _content-item_nffvg8" data-ember-action="" data-ember-action-828="828">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14777445-let-s-get-started" id="ember829" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Let's get started 🙌
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 2 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--complete _content-item_nffvg8" data-ember-action="" data-ember-action-836="836">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774847-html" id="ember837" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      HTML
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 7 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--complete _content-item_nffvg8" data-ember-action="" data-ember-action-844="844">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774849-css" id="ember845" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      CSS
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 14 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--complete _content-item_nffvg8" data-ember-action="" data-ember-action-852="852">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774853-javascript-json" id="ember853" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      JavaScript - JSON 
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 5 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--complete _content-item_nffvg8" data-ember-action="" data-ember-action-860="860">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774861-javascript-fetch" id="ember861" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      JavaScript - fetch
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 6 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--complete _content-item_nffvg8" data-ember-action="" data-ember-action-864="864">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774865-javascript-display-items" id="ember865" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      JavaScript - display items
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 6 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--active _content-item_nffvg8" data-ember-action="" data-ember-action-868="868">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774869-javascript-handling-events" id="ember869" class="course-player__content-item__link _content-item__link_nffvg8 active ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle--active course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      JavaScript - handling events
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 11 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+  </ul>
+</div>
+</ul>
+    <ul id="ember871" class="course-player__chapters-item _chapters-item_1tqvoe ember-view ui-accordion ui-widget ui-helper-reset" role="tablist"><div class="course-player__chapter-item__header _chapter-item__header_d57kmg ui-accordion-header ui-corner-top ui-state-default ui-accordion-icons ui-accordion-header-collapsed ui-corner-all" role="tab" id="ui-id-5" aria-controls="ui-id-6" aria-selected="false" aria-expanded="false" tabindex="0"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>
+  <div class="course-player__chapter-item__container _chapter-item__container_d57kmg">
+    <span class="course-player__progress _chapter-item__progress_d57kmg">
+      <span data-percentage-completion="0" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" class="_chapter-item__progress-ring_d57kmg">
+        <span class="progress-ring__ring _progress-ring__ring_jgsecr">
+	<span class="progress-ring__mask progress-ring--full _progress-ring__mask_jgsecr _progress-ring--full_jgsecr">
+		<span class="progress-ring--fill brand-color__background _progress-ring--fill_jgsecr"></span>
+	</span>
+	<span class="progress-ring__mask progress-ring--half _progress-ring__mask_jgsecr ">
+		<span class="progress-ring--fill brand-color__background _progress-ring--fill_jgsecr"></span>
+		<span class="progress-ring--fill progress-ring--fix _progress-ring--fill_jgsecr _progress-ring--fix_jgsecr"></span>
+	</span>
+</span>
+<span class="progress-ring__ring-inset _progress-ring__ring-inset_jgsecr"></span>
+<span class="progress-ring__checkmark brand-color__text _progress-ring__checkmark_jgsecr"><i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark"></i></span>
+
+      </span>
+    </span>
+
+    <h3 class="_chapter-item__title_d57kmg">Code Review 👩🏻‍💻</h3>
+
+<!---->
+<!---->
+    <span aria-hidden="true" class="course-player__chapter-item__completion _chapter-item__completion_d57kmg">
+      0 / 15
+    </span>
+
+    <span class="course-player__chapter-item__toggle _chapter-item__toggle_d57kmg">
+      <i aria-hidden="true" class="chapter-item__toggle-icon toga-icon toga-icon-caret-stroke-down _chapter-item__toggle-icon_d57kmg"></i>
+    </span>
+  </div>
+</div>
+<div class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content" id="ui-id-6" aria-labelledby="ui-id-5" role="tabpanel" aria-hidden="true" style="display: none;">
+  <ul class="course-player__chapter-item__contents _chapter-item__contents_d57kmg">
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-879="879">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774873-code-review" id="ember880" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review 🙌
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· &lt; 1 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-883="883">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774877-code-review-react" id="ember884" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - React
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 2 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-887="887">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774879-code-review-readme-file" id="ember888" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - ReadMe file
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 5 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-891="891">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774881-code-review-variable" id="ember892" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - variable
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 2 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-895="895">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774886-code-review-string-template" id="ember896" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - String template
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 3 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-899="899">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774889-code-review-array" id="ember900" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - Array
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 4 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-903="903">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774897-code-review-dry-making-function" id="ember904" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - DRY (making function)
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 5 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-907="907">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774910-code-review-class" id="ember908" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - Class
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 5 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-911="911">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774913-code-review-early-exit" id="ember912" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - Early exit
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 5 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-915="915">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774917-code-review-consistency" id="ember916" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - Consistency
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 1 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-919="919">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774921-code-review-event-delegation" id="ember920" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - Event delegation
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 2 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-923="923">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774926-code-review-switch" id="ember924" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - Switch
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 3 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-927="927">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774932-code-review-function-naming" id="ember928" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - Function naming
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 3 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-931="931">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774936-code-review-function-param" id="ember932" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - Function param
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 1 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-935="935">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774943-code-review-html-vs-javascript" id="ember936" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Code Review - HTML vs JavaScript
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 2 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+  </ul>
+</div>
+</ul>
+    <ul id="ember938" class="course-player__chapters-item _chapters-item_1tqvoe ember-view ui-accordion ui-widget ui-helper-reset" role="tablist"><div class="course-player__chapter-item__header _chapter-item__header_d57kmg ui-accordion-header ui-corner-top ui-accordion-header-collapsed ui-corner-all ui-state-default ui-accordion-icons" role="tab" id="ui-id-7" aria-controls="ui-id-8" aria-selected="false" aria-expanded="false" tabindex="0"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>
+  <div class="course-player__chapter-item__container _chapter-item__container_d57kmg">
+    <span class="course-player__progress _chapter-item__progress_d57kmg">
+      <span data-percentage-completion="0" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" class="_chapter-item__progress-ring_d57kmg">
+        <span class="progress-ring__ring _progress-ring__ring_jgsecr">
+	<span class="progress-ring__mask progress-ring--full _progress-ring__mask_jgsecr _progress-ring--full_jgsecr">
+		<span class="progress-ring--fill brand-color__background _progress-ring--fill_jgsecr"></span>
+	</span>
+	<span class="progress-ring__mask progress-ring--half _progress-ring__mask_jgsecr ">
+		<span class="progress-ring--fill brand-color__background _progress-ring--fill_jgsecr"></span>
+		<span class="progress-ring--fill progress-ring--fix _progress-ring--fill_jgsecr _progress-ring--fix_jgsecr"></span>
+	</span>
+</span>
+<span class="progress-ring__ring-inset _progress-ring__ring-inset_jgsecr"></span>
+<span class="progress-ring__checkmark brand-color__text _progress-ring__checkmark_jgsecr"><i role="img" aria-label="Completed" class="toga-icon toga-icon-checkmark"></i></span>
+
+      </span>
+    </span>
+
+    <h3 class="_chapter-item__title_d57kmg">Before you go 🔖</h3>
+
+<!---->
+<!---->
+    <span aria-hidden="true" class="course-player__chapter-item__completion _chapter-item__completion_d57kmg">
+      0 / 3
+    </span>
+
+    <span class="course-player__chapter-item__toggle _chapter-item__toggle_d57kmg">
+      <i aria-hidden="true" class="chapter-item__toggle-icon toga-icon toga-icon-caret-stroke-down _chapter-item__toggle-icon_d57kmg"></i>
+    </span>
+  </div>
+</div>
+<div class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content" id="ui-id-8" aria-labelledby="ui-id-7" role="tabpanel" aria-hidden="true" style="display: none;">
+  <ul class="course-player__chapter-item__contents _chapter-item__contents_d57kmg">
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-946="946">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/lessons/14774692-congrats" id="ember947" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Congrats! 
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-video _content-item__type-icon_nffvg8"></i>
+          Video
+            <span class="content-item__metadata text-capitalize">&nbsp;· 1 min</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-950="950">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/texts/14774693-where-to-go-next" id="ember951" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Where to go next?
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-text _content-item__type-icon_nffvg8"></i>
+          Text
+<!----><!----><!----><!---->      </div>
+    </div>
+</a></li>
+      <li data-qa="content-item" class="course-player__content-item released content-item__progress--incomplete _content-item_nffvg8" data-ember-action="" data-ember-action-961="961">
+<a href="https://academy.dream-coding.com/courses/take/mini-shopping/surveys/14774694-before-you-go" id="ember962" class="course-player__content-item__link _content-item__link_nffvg8 ember-view">    <div class="brand-color__text _content-item__progress_nffvg8">
+        <i aria-hidden="true" class="content-item__progress-icon content-item__progress-icon--circle course-player__content-item__progress-icon _content-item__progress-icon_nffvg8"></i>
+    </div>
+    <div class="content-item__title _content-item__title_nffvg8">
+      Before you go... 🙏🏼
+      <div class="content-item__details _content-item__details_nffvg8">
+            <i aria-hidden="true" class="toga-icon toga-icon-content-survey _content-item__type-icon_nffvg8"></i>
+          Survey
+            <span class="content-item__metadata text-capitalize">&nbsp;· 5 Questions</span>
+<!----><!----><!---->      </div>
+    </div>
+</a></li>
+  </ul>
+</div>
+</ul>
+</div>
+
+
+</div>
+
+            <footer class="course-player__branding-badge _branding-badge_qlbigq">
+    <a href="http://www.thinkific.com/?utm_source=ellie-s-school-58e1&amp;utm_medium=powered-by&amp;utm_campaign=course_player" rel="noreferrer noopener" target="_blank" class="course-player__branding-badge__link _branding-badge__link_qlbigq _branding-badge__link--with-padding_qlbigq" data-ember-action="" data-ember-action-972="972">
+      <svg role="img" width="203px" height="9px" viewBox="0 0 203 9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <title>Teach online with Thinkific</title>
+        <g id="Components" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+          <g id="4-Under-review-Copy-41" transform="translate(-77.000000, -771.000000)" fill="#3D4E5D" fill-rule="nonzero">
+            <g id="Group-6" transform="translate(77.000000, 771.000000)">
+              <path d="M6.072,0.1 C6.1120002,0.1 6.14599986,0.11399986 6.174,0.142 C6.20200014,0.17000014 6.216,0.2039998 6.216,0.244 L6.216,0.52 C6.216,0.5600002 6.20200014,0.59399986 6.174,0.622 C6.14599986,0.65000014 6.1120002,0.664 6.072,0.664 L3.696,0.664 C3.66399984,0.664 3.648,0.67999984 3.648,0.712 L3.648,8.356 C3.648,8.3960002 3.63400014,8.42999986 3.606,8.458 C3.57799986,8.48600014 3.5440002,8.5 3.504,8.5 L3.156,8.5 C3.1159998,8.5 3.08200014,8.48600014 3.054,8.458 C3.02599986,8.42999986 3.012,8.3960002 3.012,8.356 L3.012,0.712 C3.012,0.67999984 2.99600016,0.664 2.964,0.664 L0.708,0.664 C0.6679998,0.664 0.63400014,0.65000014 0.606,0.622 C0.57799986,0.59399986 0.564,0.5600002 0.564,0.52 L0.564,0.244 C0.564,0.2039998 0.57799986,0.17000014 0.606,0.142 C0.63400014,0.11399986 0.6679998,0.1 0.708,0.1 L6.072,0.1 Z M14.356,0.52 C14.356,0.5600002 14.3420001,0.59399986 14.314,0.622 C14.2859999,0.65000014 14.2520002,0.664 14.212,0.664 L9.688,0.664 C9.65599984,0.664 9.64,0.67999984 9.64,0.712 L9.64,3.952 C9.64,3.98400016 9.65599984,4 9.688,4 L12.892,4 C12.9320002,4 12.9659999,4.01399986 12.994,4.042 C13.0220001,4.07000014 13.036,4.1039998 13.036,4.144 L13.036,4.42 C13.036,4.4600002 13.0220001,4.49399986 12.994,4.522 C12.9659999,4.55000014 12.9320002,4.564 12.892,4.564 L9.688,4.564 C9.65599984,4.564 9.64,4.57999984 9.64,4.612 L9.64,7.888 C9.64,7.92000016 9.65599984,7.936 9.688,7.936 L14.212,7.936 C14.2520002,7.936 14.2859999,7.94999986 14.314,7.978 C14.3420001,8.00600014 14.356,8.0399998 14.356,8.08 L14.356,8.356 C14.356,8.3960002 14.3420001,8.42999986 14.314,8.458 C14.2859999,8.48600014 14.2520002,8.5 14.212,8.5 L9.148,8.5 C9.1079998,8.5 9.07400014,8.48600014 9.046,8.458 C9.01799986,8.42999986 9.004,8.3960002 9.004,8.356 L9.004,0.244 C9.004,0.2039998 9.01799986,0.17000014 9.046,0.142 C9.07400014,0.11399986 9.1079998,0.1 9.148,0.1 L14.212,0.1 C14.2520002,0.1 14.2859999,0.11399986 14.314,0.142 C14.3420001,0.17000014 14.356,0.2039998 14.356,0.244 L14.356,0.52 Z M22.244,8.5 C22.1639996,8.5 22.1120001,8.4600004 22.088,8.38 L21.572,6.808 C21.564,6.78399988 21.5480001,6.772 21.524,6.772 L17.78,6.772 C17.7559999,6.772 17.74,6.78399988 17.732,6.808 L17.228,8.38 C17.2039999,8.4600004 17.1520004,8.5 17.072,8.5 L16.688,8.5 C16.6399998,8.5 16.6040001,8.48600014 16.58,8.458 C16.5559999,8.42999986 16.5519999,8.38800028 16.568,8.332 L19.232,0.22 C19.2560001,0.1399996 19.3079996,0.1 19.388,0.1 L19.904,0.1 C19.9840004,0.1 20.0359999,0.1399996 20.06,0.22 L22.736,8.332 C22.744,8.34800008 22.748,8.36799988 22.748,8.392 C22.748,8.46400036 22.7040004,8.5 22.616,8.5 L22.244,8.5 Z M17.924,6.184 C17.916,6.20000008 17.9179999,6.21399994 17.93,6.226 C17.9420001,6.23800006 17.9559999,6.244 17.972,6.244 L21.332,6.244 C21.3480001,6.244 21.3619999,6.23800006 21.374,6.226 C21.3860001,6.21399994 21.388,6.20000008 21.38,6.184 L19.676,0.928 C19.668,0.91199992 19.6560001,0.904 19.64,0.904 C19.6239999,0.904 19.612,0.91199992 19.604,0.928 L17.924,6.184 Z M27.78,8.608 C27.2359973,8.608 26.7560021,8.50000108 26.34,8.284 C25.9239979,8.06799892 25.6020011,7.76200198 25.374,7.366 C25.1459989,6.96999802 25.032,6.51600256 25.032,6.004 L25.032,2.584 C25.032,2.07199744 25.1459989,1.62200194 25.374,1.234 C25.6020011,0.84599806 25.9239979,0.54400108 26.34,0.328 C26.7560021,0.11199892 27.2359973,0.004 27.78,0.004 C28.3160027,0.004 28.7919979,0.10999894 29.208,0.322 C29.6240021,0.53400106 29.9459989,0.83199808 30.174,1.216 C30.4020011,1.60000192 30.516,2.04399748 30.516,2.548 C30.516,2.5880002 30.5020001,2.62199986 30.474,2.65 C30.4459999,2.67800014 30.4120002,2.692 30.372,2.692 L30.024,2.704 C29.9279995,2.704 29.88,2.68000024 29.88,2.632 L29.88,2.56 C29.88,1.959997 29.6880019,1.47800182 29.304,1.114 C28.9199981,0.74999818 28.4120032,0.568 27.78,0.568 C27.1399968,0.568 26.6280019,0.74999818 26.244,1.114 C25.8599981,1.47800182 25.668,1.959997 25.668,2.56 L25.668,6.04 C25.668,6.640003 25.8619981,7.12399816 26.25,7.492 C26.6380019,7.86000184 27.1479968,8.044 27.78,8.044 C28.4120032,8.044 28.9199981,7.86000184 29.304,7.492 C29.6880019,7.12399816 29.88,6.640003 29.88,6.04 C29.88,5.95199956 29.9279995,5.908 30.024,5.908 L30.372,5.92 C30.4680005,5.92 30.516,5.9399998 30.516,5.98 L30.516,6.04 C30.516,6.54400252 30.4020011,6.98999806 30.174,7.378 C29.9459989,7.76600194 29.6240021,8.06799892 29.208,8.284 C28.7919979,8.50000108 28.3160027,8.608 27.78,8.608 Z M38.452,0.244 C38.452,0.2039998 38.4659999,0.17000014 38.494,0.142 C38.5220001,0.11399986 38.5559998,0.1 38.596,0.1 L38.944,0.1 C38.9840002,0.1 39.0179999,0.11399986 39.046,0.142 C39.0740001,0.17000014 39.088,0.2039998 39.088,0.244 L39.088,8.356 C39.088,8.3960002 39.0740001,8.42999986 39.046,8.458 C39.0179999,8.48600014 38.9840002,8.5 38.944,8.5 L38.596,8.5 C38.5559998,8.5 38.5220001,8.48600014 38.494,8.458 C38.4659999,8.42999986 38.452,8.3960002 38.452,8.356 L38.452,4.612 C38.452,4.57999984 38.4360002,4.564 38.404,4.564 L34.276,4.564 C34.2439998,4.564 34.228,4.57999984 34.228,4.612 L34.228,8.356 C34.228,8.3960002 34.2140001,8.42999986 34.186,8.458 C34.1579999,8.48600014 34.1240002,8.5 34.084,8.5 L33.736,8.5 C33.6959998,8.5 33.6620001,8.48600014 33.634,8.458 C33.6059999,8.42999986 33.592,8.3960002 33.592,8.356 L33.592,0.244 C33.592,0.2039998 33.6059999,0.17000014 33.634,0.142 C33.6620001,0.11399986 33.6959998,0.1 33.736,0.1 L34.084,0.1 C34.1240002,0.1 34.1579999,0.11399986 34.186,0.142 C34.2140001,0.17000014 34.228,0.2039998 34.228,0.244 L34.228,3.952 C34.228,3.98400016 34.2439998,4 34.276,4 L38.404,4 C38.4360002,4 38.452,3.98400016 38.452,3.952 L38.452,0.244 Z M48.42,8.596 C47.8679972,8.596 47.3820021,8.48200114 46.962,8.254 C46.5419979,8.02599886 46.2180011,7.70600206 45.99,7.294 C45.7619989,6.88199794 45.648,6.40800268 45.648,5.872 L45.648,2.728 C45.648,2.19199732 45.7619989,1.71800206 45.99,1.306 C46.2180011,0.89399794 46.5419979,0.57400114 46.962,0.346 C47.3820021,0.11799886 47.8679972,0.004 48.42,0.004 C48.9720028,0.004 49.4599979,0.11799886 49.884,0.346 C50.3080021,0.57400114 50.6359988,0.89399794 50.868,1.306 C51.1000012,1.71800206 51.216,2.19199732 51.216,2.728 L51.216,5.872 C51.216,6.40800268 51.1000012,6.88199794 50.868,7.294 C50.6359988,7.70600206 50.3080021,8.02599886 49.884,8.254 C49.4599979,8.48200114 48.9720028,8.596 48.42,8.596 Z M48.42,8.044 C49.0680032,8.044 49.589998,7.84800196 49.986,7.456 C50.382002,7.06399804 50.58,6.54400324 50.58,5.896 L50.58,2.716 C50.58,2.0759968 50.382002,1.55800198 49.986,1.162 C49.589998,0.76599802 49.0680032,0.568 48.42,0.568 C47.7799968,0.568 47.264002,0.76599802 46.872,1.162 C46.479998,1.55800198 46.284,2.0759968 46.284,2.716 L46.284,5.896 C46.284,6.54400324 46.479998,7.06399804 46.872,7.456 C47.264002,7.84800196 47.7799968,8.044 48.42,8.044 Z M54.532,8.5 C54.4919998,8.5 54.4580001,8.48600014 54.43,8.458 C54.4019999,8.42999986 54.388,8.3960002 54.388,8.356 L54.388,0.244 C54.388,0.2039998 54.4019999,0.17000014 54.43,0.142 C54.4580001,0.11399986 54.4919998,0.1 54.532,0.1 L54.892,0.1 C54.9720004,0.1 55.0279998,0.13199968 55.06,0.196 L59.368,7.18 C59.376,7.20400012 59.388,7.21400002 59.404,7.21 C59.4200001,7.20599998 59.428,7.19200012 59.428,7.168 L59.428,0.244 C59.428,0.2039998 59.4419999,0.17000014 59.47,0.142 C59.4980001,0.11399986 59.5319998,0.1 59.572,0.1 L59.92,0.1 C59.9600002,0.1 59.9939999,0.11399986 60.022,0.142 C60.0500001,0.17000014 60.064,0.2039998 60.064,0.244 L60.064,8.356 C60.064,8.3960002 60.0500001,8.42999986 60.022,8.458 C59.9939999,8.48600014 59.9600002,8.5 59.92,8.5 L59.56,8.5 C59.4799996,8.5 59.4240002,8.46800032 59.392,8.404 L55.084,1.408 C55.076,1.38399988 55.0640001,1.37399998 55.048,1.378 C55.0319999,1.38200002 55.024,1.39599988 55.024,1.42 L55.024,8.356 C55.024,8.3960002 55.0100001,8.42999986 54.982,8.458 C54.9539999,8.48600014 54.9200002,8.5 54.88,8.5 L54.532,8.5 Z M63.656,8.5 C63.6159998,8.5 63.5820001,8.48600014 63.554,8.458 C63.5259999,8.42999986 63.512,8.3960002 63.512,8.356 L63.512,0.244 C63.512,0.2039998 63.5259999,0.17000014 63.554,0.142 C63.5820001,0.11399986 63.6159998,0.1 63.656,0.1 L64.004,0.1 C64.0440002,0.1 64.0779999,0.11399986 64.106,0.142 C64.1340001,0.17000014 64.148,0.2039998 64.148,0.244 L64.148,7.888 C64.148,7.92000016 64.1639998,7.936 64.196,7.936 L68.48,7.936 C68.5200002,7.936 68.5539999,7.94999986 68.582,7.978 C68.6100001,8.00600014 68.624,8.0399998 68.624,8.08 L68.624,8.356 C68.624,8.3960002 68.6100001,8.42999986 68.582,8.458 C68.5539999,8.48600014 68.5200002,8.5 68.48,8.5 L63.656,8.5 Z M71.46,8.5 C71.4199998,8.5 71.3860001,8.48600014 71.358,8.458 C71.3299999,8.42999986 71.316,8.3960002 71.316,8.356 L71.316,0.244 C71.316,0.2039998 71.3299999,0.17000014 71.358,0.142 C71.3860001,0.11399986 71.4199998,0.1 71.46,0.1 L71.808,0.1 C71.8480002,0.1 71.8819999,0.11399986 71.91,0.142 C71.9380001,0.17000014 71.952,0.2039998 71.952,0.244 L71.952,8.356 C71.952,8.3960002 71.9380001,8.42999986 71.91,8.458 C71.8819999,8.48600014 71.8480002,8.5 71.808,8.5 L71.46,8.5 Z M75.556,8.5 C75.5159998,8.5 75.4820001,8.48600014 75.454,8.458 C75.4259999,8.42999986 75.412,8.3960002 75.412,8.356 L75.412,0.244 C75.412,0.2039998 75.4259999,0.17000014 75.454,0.142 C75.4820001,0.11399986 75.5159998,0.1 75.556,0.1 L75.916,0.1 C75.9960004,0.1 76.0519998,0.13199968 76.084,0.196 L80.392,7.18 C80.4,7.20400012 80.412,7.21400002 80.428,7.21 C80.4440001,7.20599998 80.452,7.19200012 80.452,7.168 L80.452,0.244 C80.452,0.2039998 80.4659999,0.17000014 80.494,0.142 C80.5220001,0.11399986 80.5559998,0.1 80.596,0.1 L80.944,0.1 C80.9840002,0.1 81.0179999,0.11399986 81.046,0.142 C81.0740001,0.17000014 81.088,0.2039998 81.088,0.244 L81.088,8.356 C81.088,8.3960002 81.0740001,8.42999986 81.046,8.458 C81.0179999,8.48600014 80.9840002,8.5 80.944,8.5 L80.584,8.5 C80.5039996,8.5 80.4480002,8.46800032 80.416,8.404 L76.108,1.408 C76.1,1.38399988 76.0880001,1.37399998 76.072,1.378 C76.0559999,1.38200002 76.048,1.39599988 76.048,1.42 L76.048,8.356 C76.048,8.3960002 76.0340001,8.42999986 76.006,8.458 C75.9779999,8.48600014 75.9440002,8.5 75.904,8.5 L75.556,8.5 Z M89.696,0.52 C89.696,0.5600002 89.6820001,0.59399986 89.654,0.622 C89.6259999,0.65000014 89.5920002,0.664 89.552,0.664 L85.028,0.664 C84.9959998,0.664 84.98,0.67999984 84.98,0.712 L84.98,3.952 C84.98,3.98400016 84.9959998,4 85.028,4 L88.232,4 C88.2720002,4 88.3059999,4.01399986 88.334,4.042 C88.3620001,4.07000014 88.376,4.1039998 88.376,4.144 L88.376,4.42 C88.376,4.4600002 88.3620001,4.49399986 88.334,4.522 C88.3059999,4.55000014 88.2720002,4.564 88.232,4.564 L85.028,4.564 C84.9959998,4.564 84.98,4.57999984 84.98,4.612 L84.98,7.888 C84.98,7.92000016 84.9959998,7.936 85.028,7.936 L89.552,7.936 C89.5920002,7.936 89.6259999,7.94999986 89.654,7.978 C89.6820001,8.00600014 89.696,8.0399998 89.696,8.08 L89.696,8.356 C89.696,8.3960002 89.6820001,8.42999986 89.654,8.458 C89.6259999,8.48600014 89.5920002,8.5 89.552,8.5 L84.488,8.5 C84.4479998,8.5 84.4140001,8.48600014 84.386,8.458 C84.3579999,8.42999986 84.344,8.3960002 84.344,8.356 L84.344,0.244 C84.344,0.2039998 84.3579999,0.17000014 84.386,0.142 C84.4140001,0.11399986 84.4479998,0.1 84.488,0.1 L89.552,0.1 C89.5920002,0.1 89.6259999,0.11399986 89.654,0.142 C89.6820001,0.17000014 89.696,0.2039998 89.696,0.244 L89.696,0.52 Z M97.684,8.5 C97.5959996,8.5 97.5400001,8.4600004 97.516,8.38 L95.188,0.256 L95.176,0.208 C95.176,0.13599964 95.2199996,0.1 95.308,0.1 L95.68,0.1 C95.7680004,0.1 95.8239999,0.1399996 95.848,0.22 L97.828,7.192 C97.836,7.20800008 97.8459999,7.216 97.858,7.216 C97.8700001,7.216 97.88,7.20800008 97.888,7.192 L99.712,0.22 C99.7360001,0.1399996 99.7919996,0.1 99.88,0.1 L100.264,0.1 C100.352,0.1 100.408,0.1399996 100.432,0.22 L102.328,7.192 C102.336,7.20800008 102.346,7.216 102.358,7.216 C102.37,7.216 102.38,7.20800008 102.388,7.192 L104.38,0.22 C104.404,0.1399996 104.46,0.1 104.548,0.1 L104.896,0.1 C105.000001,0.1 105.04,0.15199948 105.016,0.256 L102.688,8.38 C102.664,8.4600004 102.608,8.5 102.52,8.5 L102.148,8.5 C102.06,8.5 102.004,8.4600004 101.98,8.38 L100.108,1.276 C100.1,1.25999992 100.092,1.252 100.084,1.252 C100.076,1.252 100.068,1.25999992 100.06,1.276 L98.2,8.38 C98.176,8.4600004 98.1200004,8.5 98.032,8.5 L97.684,8.5 Z M107.72,8.5 C107.68,8.5 107.646,8.48600014 107.618,8.458 C107.59,8.42999986 107.576,8.3960002 107.576,8.356 L107.576,0.244 C107.576,0.2039998 107.59,0.17000014 107.618,0.142 C107.646,0.11399986 107.68,0.1 107.72,0.1 L108.068,0.1 C108.108,0.1 108.142,0.11399986 108.17,0.142 C108.198,0.17000014 108.212,0.2039998 108.212,0.244 L108.212,8.356 C108.212,8.3960002 108.198,8.42999986 108.17,8.458 C108.142,8.48600014 108.108,8.5 108.068,8.5 L107.72,8.5 Z M116.52,0.1 C116.56,0.1 116.594,0.11399986 116.622,0.142 C116.65,0.17000014 116.664,0.2039998 116.664,0.244 L116.664,0.52 C116.664,0.5600002 116.65,0.59399986 116.622,0.622 C116.594,0.65000014 116.56,0.664 116.52,0.664 L114.144,0.664 C114.112,0.664 114.096,0.67999984 114.096,0.712 L114.096,8.356 C114.096,8.3960002 114.082,8.42999986 114.054,8.458 C114.026,8.48600014 113.992,8.5 113.952,8.5 L113.604,8.5 C113.564,8.5 113.53,8.48600014 113.502,8.458 C113.474,8.42999986 113.46,8.3960002 113.46,8.356 L113.46,0.712 C113.46,0.67999984 113.444,0.664 113.412,0.664 L111.156,0.664 C111.116,0.664 111.082,0.65000014 111.054,0.622 C111.026,0.59399986 111.012,0.5600002 111.012,0.52 L111.012,0.244 C111.012,0.2039998 111.026,0.17000014 111.054,0.142 C111.082,0.11399986 111.116,0.1 111.156,0.1 L116.52,0.1 Z M124.312,0.244 C124.312,0.2039998 124.326,0.17000014 124.354,0.142 C124.382,0.11399986 124.416,0.1 124.456,0.1 L124.804,0.1 C124.844,0.1 124.878,0.11399986 124.906,0.142 C124.934,0.17000014 124.948,0.2039998 124.948,0.244 L124.948,8.356 C124.948,8.3960002 124.934,8.42999986 124.906,8.458 C124.878,8.48600014 124.844,8.5 124.804,8.5 L124.456,8.5 C124.416,8.5 124.382,8.48600014 124.354,8.458 C124.326,8.42999986 124.312,8.3960002 124.312,8.356 L124.312,4.612 C124.312,4.57999984 124.296,4.564 124.264,4.564 L120.136,4.564 C120.104,4.564 120.088,4.57999984 120.088,4.612 L120.088,8.356 C120.088,8.3960002 120.074,8.42999986 120.046,8.458 C120.018,8.48600014 119.984,8.5 119.944,8.5 L119.596,8.5 C119.556,8.5 119.522,8.48600014 119.494,8.458 C119.466,8.42999986 119.452,8.3960002 119.452,8.356 L119.452,0.244 C119.452,0.2039998 119.466,0.17000014 119.494,0.142 C119.522,0.11399986 119.556,0.1 119.596,0.1 L119.944,0.1 C119.984,0.1 120.018,0.11399986 120.046,0.142 C120.074,0.17000014 120.088,0.2039998 120.088,0.244 L120.088,3.952 C120.088,3.98400016 120.104,4 120.136,4 L124.264,4 C124.296,4 124.312,3.98400016 124.312,3.952 L124.312,0.244 Z" id="TEACHONLINEWITH"></path>
+              <g id="Group-5" transform="translate(132.000000, 0.250000)">
+                <path d="M5.63671712,0.0259471718 L0.473837,0.0259471718 C0.212144051,0.0259471718 3.55271368e-14,0.242359715 3.55271368e-14,0.509318116 L3.55271368e-14,0.509318116 C3.55271368e-14,0.776276517 0.212144051,0.99268906 0.473837,0.99268906 L2.50819712,0.99268906 L2.50819712,7.38782389 C2.50819649,7.51588205 2.55816611,7.63867315 2.64707102,7.72908078 C2.73597592,7.81948842 2.85650238,7.87007525 2.98203412,7.86967242 L3.11805673,7.86967242 C3.24358847,7.87007525 3.36411493,7.81948842 3.45301983,7.72908078 C3.54192474,7.63867315 3.59189436,7.51588205 3.59189373,7.38782389 L3.59189373,0.99268906 L5.63671712,0.99268906 C5.89841007,0.99268906 6.11055413,0.776276517 6.11055413,0.509318116 L6.11055413,0.509318116 C6.11055413,0.242359715 5.89841007,0.0259471718 5.63671712,0.0259471718 L5.63671712,0.0259471718 Z" id="Shape"></path>
+                <path d="M15.904182,7.32530588 L15.904182,0.579460272 C15.904182,0.274357922 15.6621645,0.0267876742 15.363081,0.0259471718 L15.363081,0.0259471718 C15.0637545,0.0267848972 14.8213066,0.274111098 14.8204854,0.579460272 L14.8204854,3.54677843 L10.3526658,3.54677843 L10.3526658,0.579460272 C10.352667,0.274357922 10.1106483,0.0267876742 9.81156489,0.0259471718 L9.81156489,0.0259471718 C9.51248147,0.0267876742 9.27046396,0.274357922 9.27046396,0.579460272 L9.27046396,7.32530588 C9.27046396,7.47170227 9.32747265,7.61210264 9.42894876,7.71562053 C9.53042487,7.81913841 9.668056,7.87729415 9.81156489,7.87729415 L9.81156489,7.87729415 C9.95507378,7.87729415 10.0927049,7.81913841 10.194181,7.71562053 C10.2956571,7.61210264 10.3526658,7.47170227 10.3526658,7.32530588 L10.3526658,4.51199549 L14.8204854,4.51199549 L14.8204854,7.32530588 C14.8213093,7.63040707 15.0639965,7.87729415 15.363081,7.87729415 L15.363081,7.87729415 C15.5065899,7.87729415 15.6442211,7.81913841 15.7456972,7.71562053 C15.8471733,7.61210264 15.904182,7.47170227 15.904182,7.32530588 L15.904182,7.32530588 Z" id="Shape"></path>
+                <path d="M20.545393,0.0259471718 C20.8442348,0.0259471718 21.0864939,0.268206309 21.0864939,0.5670481 L21.0864939,7.32856907 C21.0864939,7.62741086 20.8442348,7.86967 20.545393,7.86967 C20.2465512,7.86967 20.004292,7.62741086 20.004292,7.32856907 L20.004292,0.5670481 C20.004292,0.268206309 20.2465512,0.0259471718 20.545393,0.0259471718 Z" id="Rectangle-path"></path>
+                <path d="M31.8218167,7.10725526 L31.8218167,0.567261636 C31.8218167,0.268896385 31.585153,0.0267876373 31.2926738,0.0259471718 L31.2926738,0.0259471718 C30.9996107,0.0259471718 30.7620362,0.268301913 30.7620362,0.567261636 L30.7620362,6.11459127 L26.5363668,0.333962726 C26.3952214,0.14198224 26.1737076,0.0289968308 25.9384652,0.0289968308 L25.9384652,0.0289968308 C25.5257003,0.0289968308 25.1910882,0.370341536 25.1910882,0.791411569 L25.1910882,7.32530588 C25.1910882,7.46873157 25.2470416,7.60626077 25.3465987,7.70753491 C25.4461558,7.80880905 25.5811297,7.86550067 25.7217259,7.86509551 L25.7441472,7.86509551 C26.0358008,7.86425505 26.2717965,7.62282899 26.2717953,7.32530588 L26.2717953,1.79169971 L30.4735487,7.56317927 C30.6146941,7.75515976 30.8362079,7.86815128 31.0714502,7.86815128 L31.0714502,7.86815128 C31.2699256,7.86895545 31.4605659,7.78919699 31.6013304,7.64645845 C31.7420948,7.50371991 31.8214214,7.30972535 31.8218167,7.10725526 L31.8218167,7.10725526 Z" id="Shape"></path>
+                <path d="M36.4749858,0.0259471718 C36.7738275,0.0259471718 37.0160867,0.268206309 37.0160867,0.5670481 L37.0160867,7.32856907 C37.0160867,7.62741086 36.7738275,7.86967 36.4749858,7.86967 C36.176144,7.86967 35.9338848,7.62741086 35.9338848,7.32856907 L35.9338848,0.5670481 C35.9338848,0.268206309 36.176144,0.0259471718 36.4749858,0.0259471718 Z" id="Rectangle-path"></path>
+                <path d="M41.2659373,7.86967339 L41.3212432,7.86967339 C41.5082993,7.8703738 41.6791351,7.76145422 41.7604849,7.58962311 C41.8418347,7.41779199 41.8192456,7.21357744 41.7024054,7.06456004 L39.1418919,3.78007734 L41.4707186,0.835631624 C41.5887229,0.686786608 41.6124572,0.482042566 41.5317408,0.309225058 C41.4510243,0.136407551 41.2802009,0.0262275812 41.0925458,0.0259471718 L41.0925458,0.0259471718 C40.9494107,0.0285443835 40.8145383,0.0948308085 40.7233416,0.20740188 L38.2465343,3.2707843 C37.9827792,3.59821689 37.9827792,4.07020069 38.2465343,4.39763328 L40.8922488,7.68821529 C40.9836599,7.80303266 41.1209404,7.86967339 41.2659373,7.86967339 Z" id="Shape"></path>
+                <path d="M46.3807201,0.0259471718 C46.6795619,0.0259471718 46.9218211,0.268206309 46.9218211,0.5670481 L46.9218211,7.32856907 C46.9218211,7.62741086 46.6795619,7.86967 46.3807201,7.86967 C46.0818784,7.86967 45.8396192,7.62741086 45.8396192,7.32856907 L45.8396192,0.5670481 C45.8396192,0.268206309 46.0818784,0.0259471718 46.3807201,0.0259471718 Z" id="Rectangle-path"></path>
+                <path d="M55.2490953,3.59252332 L52.110112,3.59252332 L52.110112,0.99268906 L55.6317523,0.99268906 C55.888402,0.992701086 56.0971504,0.781793573 56.0996318,0.519991922 L56.0996318,0.507793286 C56.1008071,0.38042225 56.0520439,0.25784784 55.9641734,0.167350226 C55.876303,0.0768526125 55.7566168,0.0259471718 55.6317523,0.0259471718 L51.5017472,0.0259471718 C51.2375776,0.0259471718 51.0234259,0.244407783 51.0234259,0.513892604 L51.0234259,7.3939232 C51.0242496,7.65691736 51.2334757,7.86967 51.4912839,7.86967 L51.6407593,7.86967 C51.8985675,7.86967 52.1077936,7.65691736 52.1086173,7.3939232 L52.1086173,4.54706657 L55.2476005,4.54706657 C55.5042385,4.54455717 55.7109861,4.33160862 55.7109743,4.06979494 L55.7109743,4.06979494 C55.7109952,3.80856878 55.5051482,3.59586167 55.2490953,3.59252332 Z" id="Shape"></path>
+                <path d="M59.8469584,0.0259471718 C60.1458002,0.0259471718 60.3880594,0.268206309 60.3880594,0.5670481 L60.3880594,7.32856907 C60.3880594,7.62741086 60.1458002,7.86967 59.8469584,7.86967 C59.5481166,7.86967 59.3058575,7.62741086 59.3058575,7.32856907 L59.3058575,0.5670481 C59.3058575,0.268206309 59.5481166,0.0259471718 59.8469584,0.0259471718 Z" id="Rectangle-path"></path>
+                <path d="M63.8319724,3.93713478 C63.8319724,6.17558445 65.5912978,7.93523767 67.8364183,7.93523767 C68.7408572,7.91903973 69.6173493,7.612817 70.3416259,7.05998555 C70.4464254,6.97807486 70.5128369,6.85515934 70.5247641,6.72103001 C70.5366914,6.58690068 70.4930457,6.4538007 70.4044055,6.3539895 L70.4044055,6.3539895 C70.2423283,6.17198986 69.9721425,6.14311515 69.7766089,6.286897 C69.2298083,6.68759862 68.5767949,6.90982667 67.9036822,6.92427572 C66.2872948,6.92427572 64.976954,5.58756986 64.976954,3.93865961 C64.976954,2.28974936 66.2872948,0.953043494 67.9036822,0.953043494 C68.5795017,0.965096983 69.2335712,1.19873433 69.7691351,1.61939397 C69.9727612,1.77059028 70.257071,1.73088775 70.4133741,1.52942904 L70.4328059,1.50503176 C70.5138043,1.40371514 70.5508178,1.27309445 70.5353035,1.14331774 C70.5197893,1.01354103 70.4530879,0.895822996 70.3505944,0.81733367 C69.6298049,0.291635468 68.7673002,0.00616068437 67.8812609,-2.11386464e-13 C65.6107296,-0.00759907667 63.8319724,1.72460721 63.8319724,3.93713478 Z" id="Shape"></path>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+      <span class="sr-only">Opens in a new window</span>
+    </a>
+  </footer>
+
+        </nav>
+
+        <main id="main-content" tabindex="-1" class="course-player__lesson _course-player__lesson_n1vbpj">
+<section class="surface__container _surface__container_1yatsw _surface--content_1yatsw">
+              <div class="_content-surface_n1vbpj">
+                <div class="course-player__content-header _content-header__container_h7ytgy">
+  <div class="_content-header__title-container_h7ytgy">
+        <h2 class="course-player__content-header__title _content-header__title_h7ytgy">JavaScript - handling events</h2>
+  </div>
+  <div class="course-player__content-header__actions _content-header__actions_h7ytgy">
+<!----><!---->
+    <button class="course-player__content-header__action-fullscreen _content-header__action-fullscreen_h7ytgy" data-ember-action="" data-ember-action-988="988">
+        <span class="sr-only">Enable fullscreen</span>
+        <i aria-hidden="true" class="toga-icon toga-icon-arrow-grow"></i>
+    </button>
+  </div>
+</div>
+
+
+              <div class="content-modal-wrapper _content-modal-wrapper_n1vbpj">
+                <div class="content-modal _content-modal_n1vbpj">
+<!---->
+<!---->
+                  <section id="content-inner" class="course-player__content-inner _content-inner_n1vbpj">
+<!---->
+                    
+                    <div id="ember1392" class="ember-view"><!----></div>
+
+<!---->    <div class="_videoproxy__wrapper_3iu414">
+  <iframe src="./Dream Coding_files/bsd4vitab8ion3qpp800.html" id="iframe-ember1398" scrolling="no" seamless="" allowfullscreen="" mozallowfullscreen="" webkitallowfullscreen="" oallowfullscreen="" msallowfullscreen="" height="561" allow="autoplay" title="Video Lesson" class="_videoproxy__iframe_3iu414"></iframe>
+
+    <div id="ember1399" class="ember-view"><div class="_content_1yintd">
+    <div class="">
+      <div id="ember1400" class="ember-view"><div class="custom-theme">
+  <div class="fr-view">
+    <div class="fr-view"><p><strong>프론트엔드 개발자 필수 브라우저 101</strong></p><p><a href="https://academy.dream-coding.com/courses/browser101">https://academy.dream-coding.com/courses/browser101</a></p><p><br></p><p><strong>포트폴리오 클론 코딩</strong></p><p><a href="https://academy.dream-coding.com/courses/portfolio">https://academy.dream-coding.com/courses/portfolio</a></p></div>
+  </div>
+</div></div>
+    </div>
+
+<!----></div>
+</div>
+</div>
+
+
+                  </section>
+                    <footer id="course-player-footer" data-navigation="content" aria-label="Course content navigation" class="course-player__content-navigation _content-navigation_apmbd3 _no-audio_apmbd3">
+  <button data-qa="complete-continue__btn" class="brand-color__background brand-color__dynamic-text _button--default--small_142a8m _button--icon-right--small_142a8m" data-ember-action="" data-ember-action-1375="1375">
+    <div class="_content__wrapper_142a8m">
+<!---->  <div class="_content__container_142a8m">
+              <span>Complete &amp; continue</span>
+          <i aria-hidden="true" class="toga-icon toga-icon-arrow-right"></i>
+
+  </div>
+</div>
+
+  </button>
+      </footer>
+<!---->
+                </div>
+              </div>
+            </div>
+
+</section>
+        </main>
+
+        <aside class="course-player__right-drawer _right-drawer_n1vbpj">
+          <div class="course-player__course-discussions _course-discussions_n1vbpj">
+            <!---->
+          </div>
+        </aside>
+
+      </div>
+<!---->  </div>
+
+  <!---->
+<!---->
+<!---->  <div id="ember473" class="ember-notify-cn ember-notify-default ember-view"><!----></div>
+</div></div></div>
+<div id="push"></div>
+</div>
+<script src="./Dream Coding_files/vendor-4d6e9185450966c0cabdb0b6ab7efd2c.js.다운로드"></script>
+<script src="./Dream Coding_files/course-player-v2-53b8855f027f410ca91937da9fbd8244.js.다운로드"></script>
+<script src="./Dream Coding_files/kobayashi-b58ac082d847308992b0cecec74e7142c6ae30d15f0fd170779c78a5274fefef.js.다운로드"></script>
+<script src="./Dream Coding_files/moment.min.js.다운로드"></script>
+<script src="./Dream Coding_files/jquery-ui.min.js.다운로드"></script>
+
+
+<script>
+  var userId = 51101344;
+  var email = 'kyulim0429@gmail.com';
+  var mixpanelPerson = {
+    $email: email,
+    $created: '2021-08-04 08:01:07 +0000',
+    $last_login: '2021-09-06 08:47:37 +0000',
+    $first_name: '규림',
+    $last_name: '김',
+    'sign_in_count': 12,
+    'admin': false,
+    'referral_code': '',
+    'tenant': 'Dream Coding',
+    'subdomain': 'ellie-s-school-58e1',
+    'Is Paying': 'true',
+    'Revenue': '179.0',
+    'Courses': ["포트폴리오 웹사이트 클론코딩","프론트엔드 필수 브라우저 101 (자바스크립트 마스터 |  디버깅, 성능 분석, 실전 프로젝트 10개)","쇼핑몰 미니게임 클론코딩 \u0026 코드 리뷰 "]
+  };
+  var personTraits = {
+    'email': email,
+    'createdAt': '2021-08-04T08:01:07+00:00',
+    'firstName': '규림',
+    'lastName': '김',
+    'name': '규림 김'
+  };
+  ThinkificAnalytics.identify_for_tenant(email, mixpanelPerson, personTraits);
+  ThinkificAnalytics.name_tag(email);
+</script>
+
+
+<div class="site-footer-code">
+<script>
+  (function(d, id) {
+    if (d.getElementById(id)) return;
+    var sc, node = d.getElementsByTagName('script')[0];
+    sc = d.createElement('script'); sc.id = id;
+    sc.src = 'https://sdk.getsitekit.com/static/js/app.js#apiKey=157b25c49785ac925f40230eee88a30d';
+    node.parentNode.insertBefore(sc, node);
+  }(document, 'sitekit-sdk'));
+</script>
+
+</div>
+
+<div class="site-scripts" data-qa="footer-site-scripts">
+
+</div>
+
+
+
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
