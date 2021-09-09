@@ -1,154 +1,155 @@
 {
     "items": [
-        {
-            "type": "rice",
-            "nation": "korea",
-            "image": "img/K-braise-pork.jpg",
-            "name": " braise-pork"
-        },
+      
         {
             "type": "meat",
             "nation": "korea",
             "image": "img/K-bulgogi.jpg",
-            "name": " bulgogi"
+            "name": " 불고기(プルコギ)"
         },
         {
             "type": "meat",
             "nation": "korea",
             "image": "img/K-chicken.jpg",
-            "name": " chicken"
+            "name": " 한국치킨( 韓国チキン)"
         },
         {
             "type": "soup",
             "nation": "korea",
             "image": "img/K-chicken-soup.jpg",
-            "name": " chicken-soup"
+            "name": " 삼계탕(サムゲタン)"
         },
         {
             "type": "meat",
             "nation": "korea",
             "image": "img/K-daechang.jpg",
-            "name": " daechang"
+            "name": " 대창(ホルモン)"
         },
         {
             "type": "rice",
             "nation": "korea",
             "image": "img/K-fried-rice.jpg",
-            "name": " fried-rice"
+            "name": " 김치볶음밥(キムチチャーハン)"
         },
         {
             "type": "noodle",
             "nation": "korea",
             "image": "img/K-japchae.jpg",
-            "name": " japchae"
+            "name": " 잡채( チャプチェ)"
         },
         {
             "type": "flour",
             "nation": "korea",
             "image": "img/K-jeon.jpg",
-            "name": " jeon"
+            "name": " 전(チヂミ)"
         },
         {
             "type": "rice",
             "nation": "korea",
             "image": "img/K-kimbap.jpg",
-            "name": " kimbap"
+            "name": " 김밥(韓国のり巻き)"
         },
         {
             "type": "meat",
             "nation": "korea",
             "image": "img/K-Kimchijjim.jpg",
-            "name": " Kimchijjim"
+            "name": " 김치찜(キムチと豚肉）"
         },
         {
             "type": "meat",
             "nation": "korea",
             "image": "img/K-Porkfeet.jpg",
-            "name": " Porkfeet"
+            "name": " 족발(豚足)"
         },
         {
             "type": "meat",
             "nation": "korea",
             "image": "img/K-spam.jpg",
-            "name": " spam"
+            "name": " 스팸덮밥(ハム丼)"
+        },
+        {
+            "type": "meat",
+            "nation": "japan",
+            "image": "img/J-braise-pork.jpg",
+            "name": "豚のかくに"
         },
         {
             "type": "rice",
             "nation": "japan",
             "image": "img/J-fried-rice.jpg",
-            "name": " fried-rice"
+            "name": " チャーハン"
         },
         {
             "type": "seafood",
             "nation": "japan",
             "image": "img/J-fried-shrimp.jpg",
-            "name": " fried-shrimp"
+            "name": " エビチリ"
         },
         {
             "type": "flour",
             "nation": "japan",
             "image": "img/J-okonomiyaki.jpg",
-            "name": " okonomiyaki"
+            "name": " お好み焼き"
         },
         {
             "type": "rice",
             "nation": "japan",
             "image": "img/J-omulet.jpg",
-            "name": " omulet"
+            "name": " オムレツ"
         },
         {
             "type": "meat",
             "nation": "japan",
             "image": "img/J-porkcutlet.jpg",
-            "name": " porkcutlet"
+            "name": " トンカツ "
         },
         {
             "type": "noodle",
             "nation": "japan",
             "image": "img/J-ramen.jpg",
-            "name": " ramen"
+            "name": " ラーメン"
         },
         {
             "type": "soup",
             "nation": "japan",
             "image": "img/J-sukiyaki-soup.jpg",
-            "name": " sukiyaki"
+            "name": " すき焼き"
         },
         {
             "type": "seafood",
             "nation": "japan",
             "image": "img/J-sushi.jpg",
-            "name": " sushi"
+            "name": " 寿司"
         },
         {
             "type": "noodle",
             "nation": "japan",
             "image": "img/J-yakisoba.jpg",
-            "name": " yakisoba"
+            "name": " 焼きそば"
         },
         {
             "type": "meat",
             "nation": "japan",
             "image": "img/J-yakitori.jpg",
-            "name": " yakitori"
+            "name": " 焼き鳥"
         },
         {
             "type": "flour",
             "nation": "china",
             "image": "img/C-dumpling.jpg",
-            "name": " dumpling"
+            "name": " 餃子"
         },
         {
             "type": "vegi",
             "nation": "china",
             "image": "img/C-fried-vegi.jpg",
-            "name": " fried-vegi"
+            "name": " 麻辣香锅·"
         },
         {
             "type": "soup",
             "nation": "china",
             "image": "img/C-hot-pot.jpg",
-            "name": " hot-pot"
+            "name": " 火锅·"
         },
         {
             "type": "flour",
